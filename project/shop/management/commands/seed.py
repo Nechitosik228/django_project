@@ -11,7 +11,7 @@ class Command(BaseCommand):
         fake = Faker()
 
         categories = ["Cars", "Food", "Phones", "Computers", "Shoes", "Shirts"]
-        categories_objects = [Category.objects.get_or_create(name=categorie) for categorie in categories]
+        categories_objects = [Category.objects.get_or_create(name=categorie) [0] for categorie in categories]
 
         Product.objects.all().delete()
 
@@ -23,8 +23,8 @@ class Command(BaseCommand):
                 description = fake.text(max_nb_chars=200),
                 price = random.randint(1,101),
                 discount = random.randint(1,51),
-                stock = random.randint(1,1001),
-                availabe = random.choice(["True", "False"]),
+                entity = random.randint(1,1001),
+                available = random.choice(["True", "False"]),
                 rating = round(random.uniform(0.1, 5.0), 1),
                 attributes = {
                     "colour": fake.color_name()
