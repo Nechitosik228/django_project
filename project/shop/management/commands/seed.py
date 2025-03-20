@@ -24,7 +24,7 @@ class Command(BaseCommand):
                 price = random.randint(1,101),
                 discount = random.randint(1,51),
                 entity = random.randint(1,1001),
-                available = random.choice(["True", "False"]),
+                available = random.choice([True, False]),
                 rating = round(random.uniform(0.1, 5.0), 1),
                 attributes = {
                     "colour": fake.color_name()
