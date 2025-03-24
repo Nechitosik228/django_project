@@ -26,6 +26,20 @@
                                 ${{ product.price }}
                              </span>   
                         {% endif %}
+                        <div class="product-rating">
+                            {% for i in "12345" %} 
+                                {% if forloop.counter <= product.rating %}
+                                    <i class="bi bi-star-fill text-warning"></i>
+                                {% else %}
+                                    <i class="bi bi-star text-muted"></i>
+                                {% endif %} 
+                            {% endfor %}
+                        </div>
+                        {% if not product.available %}
+                            <small class="text-muted">
+                                Not available
+                            </small>
+                        {% endif %}
                     </div>
                 </div>
             </div>
