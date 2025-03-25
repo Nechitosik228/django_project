@@ -13,6 +13,37 @@
         <nav class="navbar navbar-dark bg-dark">
             <div class="container">
                 <a href="{% url 'shop:home' %}", class="navbar-brand">Homepage</a>
+                <div class="nav-item">
+                    <form action="{% url 'shop:home' %}" method="GET" class="d-flex mx-auto">
+                        <select name="category" id="" class="form-select me-2" onchange="this.form.submit()">
+                            <option value="">
+                                Category:
+                            </option>
+                            {% for category in categories %}
+                                <option value="{{ category.name }}">
+                                    {{ category.name }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                        <select name="filter" id="" class="form-select me-3" onchange="this.form.submit()">
+                            <option value="">
+                                Filter:
+                            </option>
+                            <option value="increase_price">
+                                Increasing price
+                            </option>
+                            <option value="decrease_price">
+                                Decreasing price
+                            </option>
+                            <option value="increase_rating">
+                                Increasing rating
+                            </option>
+                            <option value="decrease_rating">
+                                Decreasing rating
+                            </option>
+                        </select>
+                    </form>
+                </div>
             </div>
         </nav>
     </header>
