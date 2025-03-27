@@ -11,37 +11,57 @@
     
     <header>
         <nav class="navbar navbar-dark bg-dark">
-            <div class="container">
-                <a href="{% url 'shop:home' %}", class="navbar-brand">Homepage</a>
-                <div class="nav-item">
+            <div class="container d-flex flex-column">
+                <div class="navbar-nav w-100">
+                    <a href="{% url 'shop:home' %}", class="navbar-brand">Homepage</a>
+                </div>
+                <div class="nav-item text-light">
                     <form action="{% url 'shop:home' %}" method="GET" class="d-flex mx-auto">
                         <select name="category" id="" class="form-select me-2" onchange="this.form.submit()">
                             <option value="">
                                 Category:
                             </option>
                             {% for category in categories %}
-                                <option value="{{ category.name }}">
+                                <option value="{{ category.name }}" {% if request.GET.category == category.name  %}
+                                selected    
+                                {% endif %}>
                                     {{ category.name }}
                                 </option>
                             {% endfor %}
                         </select>
                         <select name="filter" id="" class="form-select me-3" onchange="this.form.submit()">
-                            <option value="">
+                            <option value="" {% if not request.GET.filter  %}
+                            selected    
+                            {% endif %}>
                                 Filter:
                             </option>
-                            <option value="increase_price">
+                            <option value="increase_price" {% if request.GET.filter == 'increase_price'  %}
+                            selected    
+                            {% endif %}>
                                 Increasing price
                             </option>
-                            <option value="decrease_price">
+                            <option value="decrease_price" {% if request.GET.filter == 'decrease_price'  %}
+                            selected    
+                            {% endif %}>
                                 Decreasing price
                             </option>
-                            <option value="increase_rating">
+                            <option value="increase_rating" {% if request.GET.filter == 'increase_rating'  %}
+                            selected    
+                            {% endif %}>
                                 Increasing rating
                             </option>
-                            <option value="decrease_rating">
+                            <option value="decrease_rating" {% if request.GET.filter == 'decrease_rating'  %}
+                            selected    
+                            {% endif %}>
                                 Decreasing rating
                             </option>
                         </select>
+                        <input type="search" name="search" class="form-control me-3" placeholder="search products" onchange="this.form.submit()" value="{{ request.GET.search|default:'' }}">
+                        <label for="min_price">Minimum price</label>
+                        <input type="number" name="min_price" class="w-25 form-control" min="0" onchange="this.form.submit()" value="{{ request.GET.min_price|default:'' }}">
+                        <label for="min_price">Minimum price</label>
+                        <input type="number" name="max_price" class="w-25 form-control" min="0" onchange="this.form.submit()" value="{{ request.GET.max_price|default:'' }}">
+
                     </form>
                 </div>
             </div>

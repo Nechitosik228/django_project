@@ -7,10 +7,22 @@ def home(request):
     category_name = request.GET.get("category")
     filter = request.GET.get("filter")
     categories = Category.objects.all()
+    search = request.GET.get("search")
+    min_price = request.GET.get("min_price")
+    max_price = request.GET.get("max_price")
+
+    if search:
+        products = products.filter(name__icontains=search)
 
     if category_name:
         category = get_object_or_404(Category, name=category_name)
         products = products.filter(category=category)
+
+    if min_price:
+        products=products.filter(price__gte=min_price)
+
+    if max_price:
+        products=products.filter(price__lte=max_price)
 
     if filter == "decrease_price":
         products=products.order_by("-price")

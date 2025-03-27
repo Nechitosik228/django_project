@@ -1,15 +1,16 @@
 {% extends 'base.html' %}
 {% load math_filters %}
 {% block content %}
-    <h1>
+<div class="container mt-5">
+    <h1 class="text-center">
         Catalog of products
     </h1>
-    <div class="row row-cols-1 row-cols-md3 g-4">
+    <div class="row row-cols-1 row-cols-md-3 g-4">
         {% for product in products %}
             <div class="col">
                 <div class="card h-100 shadow-sm">
                     <img src="{{product.image_path|default:'https://assets.turbologo.com/blog/en/2021/09/10094210/product-photo-1.png'}}" 
-                    alt="{{product.name}}" class="card-img-top">
+                    alt="{{product.name}}" class="card-img-top"> 
                     <div class="card-body">
                         <h5 class="card-title">
                             {{ product.name }}
@@ -40,7 +41,7 @@
                                 Not available
                             </small>
                         {% endif %}
-                        <a href="{% url 'shop:product_details' product.id%}" class="btn-primary">More</a>
+                        <a href="{% url 'shop:product_details' product.id%}" class="btn btn-primary">More</a>
                     </div>
                 </div>
             </div>
