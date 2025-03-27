@@ -17,9 +17,11 @@ def home(request):
     elif filter == "increase_price":
         products=products.order_by("price")
     elif filter == "increase_rating":
-        products=products.order_by("rating")
+        products = products.order_by("rating")
+    elif filter == "decrease_rating":
+        products = products.order_by("-rating")
     else:
-        products=products.order_by("-rating")
+        ...
 
     return render(request,"index.html", {"products":products,"categories": categories})
 
