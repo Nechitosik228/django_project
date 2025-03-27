@@ -20,8 +20,6 @@ def home(request):
         products = products.order_by("rating")
     elif filter == "decrease_rating":
         products = products.order_by("-rating")
-    else:
-        ...
 
     return render(request,"index.html", {"products":products,"categories": categories})
 
