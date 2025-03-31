@@ -5,6 +5,11 @@
     <h1 class="text-center">
         Catalog of products
     </h1>
+    {% if length > 0 %}
+        <h3>Products found: {{ length }}</h3>
+    {% else %}
+        <h3>No products found</h3> 
+    {% endif %}
     <div class="row row-cols-1 row-cols-md-3 g-4">
         {% for product in products %}
             <div class="col">

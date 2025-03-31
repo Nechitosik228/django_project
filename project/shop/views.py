@@ -10,6 +10,8 @@ def home(request):
     search = request.GET.get("search")
     min_price = request.GET.get("min_price")
     max_price = request.GET.get("max_price")
+    start_date = request.GET.get("start_date")
+    end_date = request.GET.get("end_date")
 
     if search:
         products = products.filter(name__icontains=search)
@@ -24,6 +26,12 @@ def home(request):
     if max_price:
         products=products.filter(price__lte=max_price)
 
+    if start_date:
+        products=products.filter(created_at__gte=start_date)
+
+    if end_date:
+        products=products.filter(created_at__lte=end_date)
+
     if filter == "decrease_price":
         products=products.order_by("-price")
     elif filter == "increase_price":
@@ -33,7 +41,9 @@ def home(request):
     elif filter == "decrease_rating":
         products = products.order_by("-rating")
 
-    return render(request,"index.html", {"products":products,"categories": categories})
+    length = len(products)
+
+    return render(request,"index.html", {"products":products,"categories": categories, "length":length})
 
 
 def about(request):
