@@ -4,9 +4,10 @@ from .models import Product, Category
 
 def home(request):
     products = Product.objects.all()
+    categories = Category.objects.all()
+
     category_name = request.GET.get("category")
     filter = request.GET.get("filter")
-    categories = Category.objects.all()
     search = request.GET.get("search")
     min_price = request.GET.get("min_price")
     max_price = request.GET.get("max_price")
@@ -22,13 +23,11 @@ def home(request):
 
     if min_price:
         products=products.filter(price__gte=min_price)
-
     if max_price:
         products=products.filter(price__lte=max_price)
 
     if start_date:
         products=products.filter(created_at__gte=start_date)
-
     if end_date:
         products=products.filter(created_at__lte=end_date)
 
