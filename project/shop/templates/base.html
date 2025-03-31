@@ -64,9 +64,9 @@
                         <input type="number" name="max_price" class="w-25 form-control" min="0" onchange="this.form.submit()" value="{{ request.GET.max_price|default:'' }}">
 
                         <label for="start_date">Start date</label>
-                        <input type="date" name="start_date" class="w-25 form-control" onchange="this.form.submit()" value="{{ request.GET.min_price|default:'' }}">
+                        <input type="date" name="start_date" class="w-25 form-control" onchange="this.form.submit()" value="{{ request.GET.start_date|default:'' }}">
                         <label for="end_date">End date</label>
-                        <input type="date" name="end_date" class="w-25 form-control" onchange="this.form.submit()" value="{{ request.GET.max_price|default:'' }}">
+                        <input type="date" name="end_date" class="w-25 form-control" onchange="this.form.submit()" value="{{ request.GET.end_date|default:'' }}">
 
                     </form>
                 </div>
