@@ -8,7 +8,7 @@ class Category(models.Model):
 
     def __str__(self):
         return self.name
-    
+
     class Meta:
         verbose_name_plural = "Categories"
         ordering = ["name"]
@@ -19,12 +19,10 @@ class Product(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField(null=True, blank=True)
     entity = models.PositiveIntegerField(default=0)
-    price = models.DecimalField(max_digits=7,decimal_places=2)
+    price = models.DecimalField(max_digits=7, decimal_places=2)
     available = models.BooleanField(default=True)
     category = models.ForeignKey(
-        Category,
-        on_delete=models.CASCADE,
-        related_name="products"
+        Category, on_delete=models.CASCADE, related_name="products"
     )
     nomenclature = models.CharField(unique=True, max_length=50)
     image_path = models.CharField(max_length=200, null=True)

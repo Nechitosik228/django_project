@@ -22,19 +22,19 @@ def home(request):
         products = products.filter(category=category)
 
     if min_price:
-        products=products.filter(price__gte=min_price)
+        products = products.filter(price__gte=min_price)
     if max_price:
-        products=products.filter(price__lte=max_price)
+        products = products.filter(price__lte=max_price)
 
     if start_date:
-        products=products.filter(created_at__gte=start_date)
+        products = products.filter(created_at__gte=start_date)
     if end_date:
-        products=products.filter(created_at__lte=end_date)
+        products = products.filter(created_at__lte=end_date)
 
     if filter == "decrease_price":
-        products=products.order_by("-price")
+        products = products.order_by("-price")
     elif filter == "increase_price":
-        products=products.order_by("price")
+        products = products.order_by("price")
     elif filter == "increase_rating":
         products = products.order_by("rating")
     elif filter == "decrease_rating":
@@ -42,7 +42,11 @@ def home(request):
 
     length = len(products)
 
-    return render(request,"index.html", {"products":products,"categories": categories, "length":length})
+    return render(
+        request,
+        "index.html",
+        {"products": products, "categories": categories, "length": length},
+    )
 
 
 def about(request):
@@ -52,4 +56,4 @@ def about(request):
 def product_details(request, product_id):
     product = get_object_or_404(Product, id=product_id)
 
-    return render(request, "product_detail.html", {"product":product})
+    return render(request, "product_detail.html", {"product": product})
