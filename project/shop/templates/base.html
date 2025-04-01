@@ -13,7 +13,7 @@
         <nav class="navbar navbar-dark bg-dark">
             <div class="container d-flex flex-column">
                 <div class="navbar-nav w-100">
-                    <a href="{% url 'shop:home' %}", class="navbar-brand">Homepage</a>
+                    <a href="{% url 'shop:home' %}" class="navbar-brand">Homepage</a>
                 </div>
                 <div class="nav-item text-light">
                     <form action="{% url 'shop:home' %}" method="GET" class="d-flex mx-auto">
@@ -60,7 +60,7 @@
                         
                         <label for="min_price">Minimum price</label>
                         <input type="number" name="min_price" class="w-25 form-control" min="0" onchange="this.form.submit()" value="{{ request.GET.min_price|default:'' }}">
-                        <label for="max_price">Minimum price</label>
+                        <label for="max_price">Maximum price</label>
                         <input type="number" name="max_price" class="w-25 form-control" min="0" onchange="this.form.submit()" value="{{ request.GET.max_price|default:'' }}">
 
                         <label for="start_date">Start date</label>
@@ -69,6 +69,7 @@
                         <input type="date" name="end_date" class="w-25 form-control" onchange="this.form.submit()" value="{{ request.GET.end_date|default:'' }}">
 
                     </form>
+                    <a href="{% url 'accounts:register' %}" class="navbar-brand">Register</a>
                 </div>
             </div>
         </nav>
