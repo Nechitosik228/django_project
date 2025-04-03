@@ -15,6 +15,33 @@
                 <div class="navbar-nav w-100">
                     <a href="{% url 'shop:home' %}" class="navbar-brand">Homepage</a>
                 </div>
+                <div class="callapse navbar-collapse w-100">
+                    <ul class="navbar-nav ms-auto">
+                    {% if request.user.is_authenticated %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'accounts:profile' %}">
+                                {{ request.user.username }}
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'accounts:logout' %}">
+                                Log out
+                            </a>
+                        </li>
+                    {% else %}
+                    <li class="nav-item">
+                        <a href="{% url 'accounts:register' %}" class="navbar-brand">
+                            Register
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{% url 'accounts:login' %}" class="navbar-brand">
+                            Login
+                        </a>
+                    </li>
+                    {% endif %}
+                    </ul>
+                </div>
                 <div class="nav-item text-light">
                     <form action="{% url 'shop:home' %}" method="GET" class="d-flex mx-auto">
                         <select name="category" id="" class="form-select me-2" onchange="this.form.submit()">
@@ -67,9 +94,7 @@
                         <input type="date" name="start_date" class="w-25 form-control" onchange="this.form.submit()" value="{{ request.GET.start_date|default:'' }}">
                         <label for="end_date">End date</label>
                         <input type="date" name="end_date" class="w-25 form-control" onchange="this.form.submit()" value="{{ request.GET.end_date|default:'' }}">
-
                     </form>
-                    <a href="{% url 'accounts:register' %}" class="navbar-brand">Register</a>
                 </div>
             </div>
         </nav>
