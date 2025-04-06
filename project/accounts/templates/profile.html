@@ -12,6 +12,6 @@
             Email: {{ request.user.email }}
         </li>
     </ul>
-    <a href="">Change password</a>
+    <a href="{% url 'accounts:password_change' %}">Change password</a>
 
 {% endblock %}
