@@ -1,7 +1,8 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
-from .forms import RegisterForm
+from .forms import RegisterForm, ProfileUpdateForm
+from .models import Profile
 
 
 def register(request):
@@ -15,6 +16,7 @@ def register(request):
         form = RegisterForm()
 
     return render(request, 'register.html', {'form':form})
+
 
 def login_view(request):
     if request.method == 'POST':
@@ -30,10 +32,35 @@ def login_view(request):
     else:
         return render(request, 'login.html')
     
+
 def logout_view(request):
     logout(request)
     return redirect('shop:home')
 
+
 @login_required
 def profile(request):
-    return render(request, 'profile.html')
+    profile, _ = Profile.objects.get_or_create(user=request.user)
+    return render(request, 'profile.html', {'profile':profile})
+
+
+@login_required
+def edit_profile_view(request):
+    user = request.user
+    profile, _ = Profile.objects.get_or_create(user=user)
+    if request.method == 'POST':
+        form = ProfileUpdateForm(request.POST, request.FILES, user=user)
+        if form.is_valid():
+            new_email = form.cleaned_data.get('email')
+            user.email = new_email
+            user.save()
+
+            avatar = form.cleaned_data.get('avatar')
+            if avatar:
+                profile.avatar = avatar
+            profile.save()
+            return redirect('accounts:profile')
+    else:
+        form = ProfileUpdateForm()
+    
+    return render(request, 'edit_profile.html', {'form':form})
