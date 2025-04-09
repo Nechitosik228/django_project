@@ -49,7 +49,7 @@ def edit_profile_view(request):
     user = request.user
     profile, _ = Profile.objects.get_or_create(user=user)
     if request.method == 'POST':
-        form = ProfileUpdateForm(request.POST, request.FILES, user=user)
+        form = ProfileUpdateForm(request.POST, request.FILES)
         if form.is_valid():
             new_email = form.cleaned_data.get('email')
             user.email = new_email
