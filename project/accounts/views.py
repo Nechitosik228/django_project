@@ -10,18 +10,46 @@ from django.urls import reverse
 from .forms import RegisterForm, ProfileUpdateForm
 from .models import Profile
 
+# not a view
+def send_confirmation_email(request, user, email, confirm_view:str):
+    confirm_url = request.build_absolute_uri(reverse(f"accounts:{confirm_view}"))
+    confirm_url += f"?user={user.id}&email={email}"
+    subject = "Confirm email"
+    message = f"Confirm your email on link: {confirm_url}"
+    send_mail(
+            subject, message, "no-reply", [email], fail_silently=False
+        )
+    messages.info(request, "Confirmation email has been sent")
+    
 
+#views:
 def register(request):
     if request.method == 'POST':
         form = RegisterForm(request.POST)
         if form.is_valid():
+            email = form.cleaned_data.get('email')
             user = form.save()
-            login(request, user)
-            return redirect('shop:home')
+            send_confirmation_email(request, user, email, 'confirm_register')
     else:
         form = RegisterForm()
 
     return render(request, 'register.html', {'form':form})
+
+
+def confirm_register(request):
+    user_id = request.GET.get('user')
+    email = request.GET.get('email')
+
+    if not user_id or not email:
+        return HttpResponseBadRequest('BAD REQUEST: No user or email')
+    try:
+        user = User.objects.get(id=user_id)
+    except User.DoesNotExist:
+        return HttpResponseBadRequest('BAD REQUEST: No user or email')
+    
+    login(request, user)
+    messages.info(request, 'You are registered')
+    return redirect('shop:home')
 
 
 def login_view(request):
@@ -59,15 +87,7 @@ def edit_profile_view(request):
         if form.is_valid():
             new_email = form.cleaned_data.get("email")
             if new_email != user.email:
-                confirm_url = request.build_absolute_uri(reverse("accounts:confirm_email"))
-                confirm_url += f"?user={user.id}&email={new_email}"
-                subject = "Confirm new email"
-                message = f"Hello, {user.username} you want to change your email? Confirm your email on link: {confirm_url}"
-                send_mail(
-                    subject, message, "no-reply", [new_email], fail_silently=False
-                )
-                messages.info(request, "Confirmation email has been sent")
-
+                send_confirmation_email(request, user, new_email, "confirm_email")
             avatar = form.cleaned_data.get("avatar")
             if avatar:
                 profile.avatar = avatar
@@ -81,20 +101,20 @@ def edit_profile_view(request):
 
 
 def confirm_email(request):
-    user_id = request.GET.get("user")
-    email = request.GET.get("email")
+    user_id = request.GET.get('user')
+    email = request.GET.get('email')
 
     if not user_id or not email:
-        return HttpResponseBadRequest("BAD REQUEST: No user or email")
+        return HttpResponseBadRequest('BAD REQUEST: No user or email')
     try:
         user = User.objects.get(id=user_id)
     except User.DoesNotExist:
-        return HttpResponseBadRequest("BAD REQUEST: No user or email")
+        return HttpResponseBadRequest('BAD REQUEST: No user or email')
 
     if User.objects.filter(email=email).exists():
-        return HttpResponseBadRequest("This email is already taken")
+        return HttpResponseBadRequest('This email is already taken')
 
     user.email = email
     user.save()
 
-    return render(request, "email_change_done.html", {"email": email})
+    return render(request, 'email_change_done.html', {'email': email})
