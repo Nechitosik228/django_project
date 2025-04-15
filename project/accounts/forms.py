@@ -8,6 +8,13 @@ class RegisterForm(UserCreationForm):
     email = forms.EmailField(required=True)
     captcha = CaptchaField()
 
+    def clean_email(self):
+        new_email = self.cleaned_data.get("email")
+        if User.objects.filter(email=new_email).exists():
+            raise forms.ValidationError("This email already exists")
+        else:
+            return new_email
+
     class Meta:
         model = User
         extra_fields = ['email']

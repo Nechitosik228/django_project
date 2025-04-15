@@ -49,7 +49,7 @@ def confirm_register(request):
     
     login(request, user)
     messages.info(request, 'You are registered')
-    return redirect('shop:home')
+    return redirect('accounts:profile')
 
 
 def login_view(request):

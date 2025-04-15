@@ -15,4 +15,10 @@
         <input class="form-control mb-2" type="password" name="password" placeholder="Enter your password">
         <input class="btn btn-primary" type="submit" value="submit">
     </form>
+
+    <p>
+        <a href="{% url 'accounts:password_reset' %}">
+           Forgot the password? 
+        </a>
+    </p>
 {% endblock %}

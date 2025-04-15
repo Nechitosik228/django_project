@@ -1,0 +1,10 @@
+Hello! 
+
+You (or someone else) tried to change your password for your account in Shop. 
+
+If it was you, follow this link to reset password: 
+{{ protocol }}://{{ domain }}{% url 'accounts:password_reset_confirm' uidb64=uid token=token %}. 
+
+Otherwise ignore this email.
+
+With honor and respect, Administration of the Shop.
