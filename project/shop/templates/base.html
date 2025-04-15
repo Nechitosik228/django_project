@@ -8,7 +8,6 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
 </head>
 <body class="d-flex flex-column vh-100">
-    
     <header>
         <nav class="navbar navbar-dark bg-dark">
             <div class="container d-flex flex-column">
@@ -100,6 +99,15 @@
         </nav>
     </header>
 
+    {% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+        <li>
+            {{ message }}
+        </li>
+        {% endfor %}
+    </ul>
+    {% endif %}
     <main class="container mt-3 flex-shrink-0">
         {% block content %}
         

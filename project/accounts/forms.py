@@ -1,6 +1,6 @@
 from django import forms
-from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
+from django.contrib.auth.forms import UserCreationForm
 from django.core.exceptions import ValidationError
 from captcha.fields import CaptchaField
 
@@ -24,3 +24,9 @@ class ProfileUpdateForm(forms.Form):
             raise ValidationError('User with this email already exists')
         else:
             return new_email
+
+    def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop("user", None)
+        super().__init__(*args, **kwargs)
+        if self.user:
+            self.fields["email"].initial = self.user.email
