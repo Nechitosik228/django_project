@@ -5,33 +5,21 @@ from django.contrib import messages
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from django.core.mail import send_mail
-from django.urls import reverse
+
 
 from .forms import RegisterForm, ProfileUpdateForm
 from .models import Profile
 from shop.models import Cart, CartItem, Product
+from utils import send_confirmation_email
 
-# not a view
-def send_confirmation_email(request, user, email, confirm_view:str):
-    confirm_url = request.build_absolute_uri(reverse(f"accounts:{confirm_view}"))
-    confirm_url += f"?user={user.id}&email={email}"
-    subject = "Confirm email"
-    message = f"Confirm your email on link: {confirm_url}"
-    send_mail(
-            subject, message, "no-reply", [email], fail_silently=False
-        )
-    messages.info(request, "Confirmation email has been sent")
-    
 
-#views:
 def register(request):
     if request.method == 'POST':
         form = RegisterForm(request.POST)
         if form.is_valid():
             email = form.cleaned_data.get('email')
             user = form.save()
-            send_confirmation_email(request, user, email, 'confirm_register')
+            send_confirmation_email(request, user, email, 'accounts:confirm_register')
     else:
         form = RegisterForm()
 
@@ -48,7 +36,7 @@ def confirm_register(request):
         user = User.objects.get(id=user_id)
     except User.DoesNotExist:
         return HttpResponseBadRequest('BAD REQUEST: No user or email')
-    
+
     login(request, user)
     messages.info(request, 'You are registered')
     return redirect('accounts:profile')
@@ -101,7 +89,7 @@ def edit_profile_view(request):
         if form.is_valid():
             new_email = form.cleaned_data.get("email")
             if new_email != user.email:
-                send_confirmation_email(request, user, new_email, "confirm_email")
+                send_confirmation_email(request, user, new_email, "accounts:confirm_email")
             avatar = form.cleaned_data.get("avatar")
             if avatar:
                 profile.avatar = avatar

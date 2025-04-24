@@ -138,3 +138,6 @@ EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 # DEFAULT_FROM_EMAIL = ""
 
 CART_SESSION_ID = 'cart'
+
+ADMIN_EMAIL = 'admin@gmail.com'
+DEFAULT_EMAIL = 'balbes@gmail.com'

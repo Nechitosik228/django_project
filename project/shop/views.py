@@ -1,8 +1,10 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.conf import settings
 from django.contrib import messages
-from .models import Product, Category, Cart, CartItem, OrderItem, Order
+
+from .models import Product, Category, Cart, CartItem, OrderItem, Order, Payment
 from .forms import OrderCreateForm
+from utils import send_order_confirmation_email
 
 
 def calculate_discount(value, arg):
@@ -163,7 +165,7 @@ def checkout(request):
                 for product_id, amount in cart.items():
                     product = Product.objects.get(id=product_id)
                     cart_items.append({"product": product, "amount": amount})
-            OrderItem.objects.bulk_create(
+            items = OrderItem.objects.bulk_create(
                 [
                     OrderItem(
                         order=order,
@@ -176,11 +178,19 @@ def checkout(request):
                     for item in cart_items
                 ]
             )
+            total_price = sum(i.product.price*i.amount for i in items)
+            method = form.cleaned_data.get('payment_method')
+            if method != 'cash':
+                Payment.objects.create(order=order, provider=method, amount=total_price)
+            order.status = 2
+            order.save()
+
             if request.user.is_authenticated:
                 cart.items.all().delete()
             else:
                 request.session[settings.CART_SESSION_ID] = {}
 
+            send_order_confirmation_email(order)
             messages.success(request, 'You have completed your order!') 
             return redirect('shop:home')
     return render(request, "checkout.html", {"form": form})
@@ -200,3 +210,6 @@ def cart_delete(request, product_id:int):
             cart_item.amount -= 1
             cart_item.save()
     return redirect("shop:cart_detail")
+
+
+
