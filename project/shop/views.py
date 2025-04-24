@@ -76,9 +76,8 @@ def cart_add(request, product_id):
         else:
             cart[product_id] = 1
         request.session[settings.CART_SESSION_ID] = cart
-        return redirect("shop:cart_detail")
     else:
-        cart = Cart.objects.get_or_create(user=request.user)
+        cart, _ = Cart.objects.get_or_create(user=request.user)
         cart_item, created = CartItem.objects.get_or_create(cart=cart, product=product)
         if not created:
             cart_item.amount += 1
@@ -95,7 +94,11 @@ def cart_detail_view(request):
         total_price = 0
         for product in products:
             count = cart[str(product.id)]
-            price = count * product.price
+            if product.discount:
+                raw_price = calculate_discount(product.price, product.discount)
+            else:
+                raw_price = product.price
+            price = count * raw_price
             total_price += price
             cart_items.append({"product": product, "count": count, "price": price})
     else:
@@ -109,13 +112,26 @@ def cart_detail_view(request):
             cart_items = []
             total_price = 0
         else:
-            cart_items = cart.items.select_related
-            total_price = sum(item.product.price * item.amount for item in cart_items)
+            raw_items = cart.items.select_related("product").all()
+            cart_items = []
+            total_price = 0
+            for item in raw_items:
+                product = item.product
+                count = item.amount
+                if count == 0:
+                    continue
+                if product.discount:
+                    raw_price = calculate_discount(product.price, product.discount)
+                else:
+                    raw_price = product.price
+                price = count * raw_price
+                total_price += price
+                cart_items.append({"product": product, "count": count, "price": price})
 
     return render(
         request,
         "cart_detail.html",
-        {"card_items": cart_items, "total_price": total_price},
+        {"cart_items": cart_items, "total_price": total_price},
     )
 
 
@@ -168,3 +184,19 @@ def checkout(request):
             messages.success(request, 'Text') 
             return redirect('shop:home')
     return render(request, "checkout.html", {"form": form})
+
+
+def cart_delete(request, product_id:int):
+    product = get_object_or_404(Product, id=product_id)
+    product_key = str(product_id)
+    if not request.user.is_authenticated:
+        cart = request.session.get(settings.CART_SESSION_ID, {})
+        cart[product_key] -= 1
+        request.session[settings.CART_SESSION_ID] = cart
+    else:
+        cart, _ = Cart.objects.get_or_create(user=request.user)
+        cart_item, created = CartItem.objects.get_or_create(cart=cart, product=product)
+        if not created:
+            cart_item.amount -= 1
+            cart_item.save()
+    return redirect("shop:cart_detail")

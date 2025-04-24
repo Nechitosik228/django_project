@@ -78,8 +78,7 @@ def login_view(request):
             return redirect(next_url or 'shop:home')
         else:
             return render(request, 'login.html', {'error': 'Incorrect login or password'})
-    else:
-        return render(request, 'login.html')
+    return render(request, 'login.html')
     
 
 def logout_view(request):
