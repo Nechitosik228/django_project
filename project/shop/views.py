@@ -181,7 +181,7 @@ def checkout(request):
             else:
                 request.session[settings.CART_SESSION_ID] = {}
 
-            messages.success(request, 'Text') 
+            messages.success(request, 'You have completed your order!') 
             return redirect('shop:home')
     return render(request, "checkout.html", {"form": form})
 
