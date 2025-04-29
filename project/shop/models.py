@@ -55,6 +55,9 @@ class CartItem(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     amount = models.PositiveIntegerField(default=1)
 
+    class Meta:
+        unique_together = ['cart', 'product']
+
     def str(self):
         return f"{self.product.name ,' : ', self.amount}"
 
