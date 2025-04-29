@@ -20,7 +20,7 @@ def send_confirmation_email(request, user, email, cofirm_view:str):
 def send_order_confirmation_email(order: Order):
     subject = f'Cofirmation {order}'
     context = {'order':order}
-    text_content = render_to_string('email/confirm_order_email', context=context)
+    text_content = render_to_string('project/templates/email/confirm_order_email.txt', context=context)
     to_email = order.contact_email
     try: 
         send_mail(subject, text_content, settings.DEFAULT_EMAIL, [to_email, settings.ADMIN_EMAIL])
