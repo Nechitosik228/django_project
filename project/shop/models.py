@@ -33,6 +33,13 @@ class Product(models.Model):
     attributes = models.JSONField(default=dict)
     discount = models.IntegerField(default=0)
 
+    @property
+    def discount_price(self):
+        if self.discount:
+            return self.price - self.price * self.discount / 100
+        else:
+            return self.price
+
     class Meta:
         ordering = ["-created_at"]
         db_table = "products"
@@ -54,6 +61,10 @@ class CartItem(models.Model):
     cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name="items")
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     amount = models.PositiveIntegerField(default=1)
+
+    @property
+    def item_total(self):
+        return self.amount * self.product.price if not self.product.discount else self.amount * self.product.discount_price
 
     class Meta:
         unique_together = ['cart', 'product']
