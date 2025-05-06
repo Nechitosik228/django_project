@@ -1,5 +1,4 @@
 {% extends 'base.html' %}
-{% load math_filters %}
 {% block content %}
 <div class="container mt-5">
     <h1 class="text-center">
@@ -22,7 +21,7 @@
                         </h5>
                         {% if product.discount %}
                             <span class="text-success">
-                                ${{ product.price|calculate_discount:product.discount }}
+                                ${{ product.discount_price }}
                             </span>
                             <span class="text-muted text-decoration-line-through">
                                 ${{ product.price }}

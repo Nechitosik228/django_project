@@ -102,6 +102,10 @@ class OrderItem(models.Model):
     amount = models.PositiveIntegerField(default=1)
     price = models.DecimalField(max_digits=10, decimal_places=2)
 
+    @property
+    def item_total(self):
+        return self.amount * self.product.price if not self.product.discount else self.amount * self.product.discount_price
+
     def __str__(self):
         return f"{self.order.id} : {self.product.name} : {self.amount} : ${self.price}"
 

@@ -5,10 +5,10 @@
 
 Склад замовлення:
 {% for item in order.items.all %}
-- {{ item.product.name }} – {{ item.quantity }} шт. по {{ item.price }} грн (разом {{ item.quantity|mul:item.price }} грн)
+- {{ item.product.name }} – {{ item.amount }} шт. по {{ item.price }} & (разом {{ item.item_total }} $)
 {% endfor %}
 
-Сума до сплати: {{ order.items.all|calc_total }} грн.
+Сума до сплати: {{ total_price }} $.
 
 Адреса доставки: {{ order.address }}
 

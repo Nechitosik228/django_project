@@ -17,9 +17,9 @@ def send_confirmation_email(request, user, email, cofirm_view:str):
     messages.info(request, "Confirmation email has been sent")
 
 
-def send_order_confirmation_email(order: Order):
+def send_order_confirmation_email(order: Order, total_price):
     subject = f'Cofirmation {order}'
-    context = {'order':order}
+    context = {'order':order, 'total_price':total_price}
     text_content = render_to_string('email/confirm_order_email.txt', context=context)
     to_email = order.contact_email
     try: 

@@ -7,11 +7,6 @@ from .forms import OrderCreateForm
 from utils import send_order_confirmation_email
 
 
-def calculate_discount(value, arg):
-    discount_value = value * arg / 100
-    return value - discount_value
-
-
 def home(request):
     products = Product.objects.all()
     categories = Category.objects.all()
@@ -95,14 +90,14 @@ def cart_detail_view(request):
         cart_items = []
         total_price = 0
         for product in products:
-            count = cart[str(product.id)]
+            amount = cart[str(product.id)]
             if product.discount:
-                raw_price = calculate_discount(product.price, product.discount)
+                raw_price = product.discount_price
             else:
                 raw_price = product.price
-            price = count * raw_price
+            price = amount * raw_price
             total_price += price
-            cart_items.append({"product": product, "count": count, "price": price})
+            cart_items.append({"product": product, "amount": amount, "price": price})
     else:
         try:
             cart = request.user.cart
@@ -114,21 +109,11 @@ def cart_detail_view(request):
             cart_items = []
             total_price = 0
         else:
-            raw_items = cart.items.select_related("product").all()
-            cart_items = []
+            cart_items = cart.items.select_related("product").all()
             total_price = 0
-            for item in raw_items:
+            for item in cart_items:
                 product = item.product
-                count = item.amount
-                if count == 0:
-                    continue
-                if product.discount:
-                    raw_price = calculate_discount(product.price, product.discount)
-                else:
-                    raw_price = product.price
-                price = count * raw_price
-                total_price += price
-                cart_items.append({"product": product, "count": count, "price": price})
+                total_price += item.item_total
 
     return render(
         request,
@@ -171,14 +156,12 @@ def checkout(request):
                         order=order,
                         product=item.product,
                         amount=item.amount,
-                        price=calculate_discount(
-                            item.product.price, item.product.discount
-                        )
+                        price=item.product.discount_price
                     )
                     for item in cart_items
                 ]
             )
-            total_price = sum(i.product.price*i.amount for i in items)
+            total_price = sum(i.product.discount_price*i.amount for i in items)
             method = form.cleaned_data.get('payment_method')
             if method != 'cash':
                 Payment.objects.create(order=order, provider=method, amount=total_price)
@@ -190,7 +173,7 @@ def checkout(request):
             else:
                 request.session[settings.CART_SESSION_ID] = {}
 
-            send_order_confirmation_email(order)
+            send_order_confirmation_email(order, total_price)
             messages.success(request, 'You have completed your order!') 
             return redirect('shop:home')
     return render(request, "checkout.html", {"form": form})
@@ -208,7 +191,10 @@ def cart_delete(request, product_id:int):
         cart_item, created = CartItem.objects.get_or_create(cart=cart, product=product)
         if not created:
             cart_item.amount -= 1
-            cart_item.save()
+            if cart_item.amount == 0:
+                cart_item.delete()
+            else:
+                cart_item.save()
     return redirect("shop:cart_detail")
 
 

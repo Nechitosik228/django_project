@@ -18,11 +18,12 @@
                     {% for item in cart_items %}
                         <tr>
                             <td>{{item.product.name}}</td>
-                            <td>{{item.count}}</td>
+                            <td>{{item.amount}}</td>
                             <td>{{item.price}}</td>
-                            <td><a href="{% url 'shop:cart_delete' item.product.id %}" class="btn btn-sm btn-outline-danger" title="Remove">X</a></td>
+                            <td><a href="{% url 'shop:cart_delete' item.product.id %}" class="btn btn-sm btn-outline-danger" title="Remove">-</a></td>
                             <td><a href="{% url 'shop:cart_add' item.product.id %}" class="btn btn-sm btn-outline-success" title="Add">+</a></td>
                         </tr>
+                        
                     {% endfor %}
                         <tr class="table-secondary">
                             <td class="text-start"><strong>Total:</strong></td>
