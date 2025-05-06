@@ -1,5 +1,8 @@
 from django.urls import path
-from .views import (
+from rest_framework.routers import DefaultRouter
+from .views.product import ProductViewSet
+from .views.category import CategoryViewSet
+from .views.views import (
     home,
     about,
     product_details,
@@ -12,6 +15,13 @@ from .views import (
 
 app_name = "shop"
 
+
+router = DefaultRouter()
+
+router.register(prefix=r'products', viewset=ProductViewSet)
+router.register(prefix=r'categories', viewset=CategoryViewSet)
+
+
 urlpatterns = [
     path("home/", home, name="home"),
     path("about/", about, name="about"),
@@ -21,3 +31,5 @@ urlpatterns = [
     path("cart_delete/<int:product_id>/", cart_delete, name="cart_delete"),
     path("order/checkout/", checkout, name="checkout"),
 ]
+
+urlpatterns += router.urls
