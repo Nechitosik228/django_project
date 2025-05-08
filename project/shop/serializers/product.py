@@ -5,12 +5,26 @@ from shop.models import Product
 
 
 class ProductSerializer(serializers.ModelSerializer):
-    category = serializers.PrimaryKeyRelatedField(read_only = True)
+    category = serializers.PrimaryKeyRelatedField(read_only=True)
     discount_price = serializers.SerializerMethodField()
-    
+
     class Meta:
         model = Product
-        fields = ['id', 'name', 'description', 'entity', 'price', 'available', 'category', 'nomenclature', 'created_at', 'rating', 'discount', 'attributes', 'discount_price']
+        fields = [
+            "id",
+            "name",
+            "description",
+            "entity",
+            "price",
+            "available",
+            "category",
+            "nomenclature",
+            "created_at",
+            "rating",
+            "discount",
+            "attributes",
+            "discount_price",
+        ]
 
     @extend_schema_field(OpenApiTypes.FLOAT)
     def get_discount_price(self, obj):
