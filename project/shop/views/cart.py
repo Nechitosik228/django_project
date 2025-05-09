@@ -1,6 +1,7 @@
 from rest_framework.viewsets import ViewSet
 from rest_framework.decorators import action
 from rest_framework.response import Response
+from drf_spectacular.utils import extend_schema, extend_schema_view, OpenApiParameter
 from django.shortcuts import get_object_or_404
 from django.conf import settings
 
@@ -8,9 +9,12 @@ from django.conf import settings
 from shop.models import Cart, CartItem, Product
 from . import CartItemSerializer, CartSerializer, ProductSerializer
 
-class CartViewSet(ViewSet):
 
-    @action(detail=False, methods=['post'], url_path='add-to-cart/<int:proudct_id>/')
+
+class CartViewSet(ViewSet):
+    queryset = CartItem.objects.all()
+
+    @action(detail=False, methods=['post'], url_path='cart-add/<int:product_id>')
     def add(self, request, product_id=None):
         product = get_object_or_404(Product, id=product_id)
         if request.user.is_authenticated:
@@ -26,7 +30,7 @@ class CartViewSet(ViewSet):
             cart[str(product_id)] = cart.get(str(product_id), default=0) + 1
         return Response({'message':f'Product with id {product_id} has been added'}, status=200)
 
-    @action(detail=False, methods=['get'], url_path='cart-items/')
+    @action(detail=False, methods=['get'], url_path='cart-items')
     def detail(self, request):
         if request.user.is_authenticated:
             cart = request.user.cart
