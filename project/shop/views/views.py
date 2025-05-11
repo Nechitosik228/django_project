@@ -1,7 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.conf import settings
 from django.contrib import messages
-from rest_framework import filters, viewsets
 
 from ..models import Product, Category, Cart, CartItem, OrderItem, Order, Payment
 from ..forms import OrderCreateForm

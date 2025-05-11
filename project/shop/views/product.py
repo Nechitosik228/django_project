@@ -53,16 +53,56 @@ from . import ProductSerializer
         ]
     ),
     retrieve = extend_schema(
-        description='Get deatils about certain product'
+        description='**Get details about certain product** by **id**',
     ),
     create = extend_schema(
-        description='Create a product'
+        description="""
+        Create a product with this information: 
+
+        - name: Product's name (required, max-length=100) 
+
+        - description: Product's description (not required) 
+
+        - entity: Product's entity. Must not be less than 0 (not required, default=0) 
+        
+        - price: Product's price (required, max-digits=7, decimal-places=2) 
+        
+        - available: Product's availability (True or False, default=True) 
+        
+        - nomenclature: Product's nomenclature (unique=True) 
+        
+        - rating: Product's rating (default=0.0) 
+        
+        - discount: Product's discount (default=0) 
+        
+        - attributes: Product's attributes (default=dict)"""
     ),
     update = extend_schema(
-        description='Update a product'
+        description="""
+        - id: Product's id
+
+        Update a product with this information: 
+
+        - name: New product's name (required, max-length=100) 
+
+        - description: New product's description (not required) 
+
+        - entity: New product's entity. Must not be less than 0 (not required, default=0) 
+        
+        - price: New product's price (required, max-digits=7, decimal-places=2) 
+        
+        - available: New product's availability (True or False, default=True) 
+        
+        - nomenclature: New product's nomenclature (unique=True) 
+        
+        - rating: New product's rating (default=0.0) 
+        
+        - discount: New product's discount (default=0) 
+        
+        - attributes: New product's attributes (default=dict)"""
     ),
     destroy = extend_schema(
-        description='Delete a product',
+        description='Delete a product by **id**',
     ),
 )
 class ProductViewSet(ModelViewSet):

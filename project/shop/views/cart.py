@@ -9,7 +9,15 @@ from django.conf import settings
 from shop.models import Cart, CartItem, Product
 from . import CartItemSerializer, CartSerializer, ProductSerializer
 
-
+@extend_schema_view(
+    add=extend_schema(
+        description="""
+        Create a cart item
+        
+        - product_id: Product's id 
+        """
+    )
+)
 
 class CartViewSet(ViewSet):
     queryset = CartItem.objects.all()
