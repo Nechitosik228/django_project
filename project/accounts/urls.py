@@ -1,6 +1,6 @@
 from django.urls import path, reverse_lazy
 from django.contrib.auth import views as auth_views
-from .views import register, login_view, logout_view, profile, edit_profile_view, confirm_email, confirm_register
+from .views.views import register, login_view, logout_view, profile, edit_profile_view, confirm_email, confirm_register
 
 app_name = "accounts"
 

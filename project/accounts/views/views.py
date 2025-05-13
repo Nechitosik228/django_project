@@ -7,8 +7,8 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 
 
-from .forms import RegisterForm, ProfileUpdateForm
-from .models import Profile
+from ..forms import RegisterForm, ProfileUpdateForm
+from ..models import Profile
 from shop.models import Cart, CartItem, Product
 from utils import send_confirmation_email
 
