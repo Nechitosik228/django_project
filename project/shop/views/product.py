@@ -3,9 +3,12 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import OrderingFilter, SearchFilter
 from drf_spectacular.utils import extend_schema, extend_schema_view, OpenApiParameter, OpenApiExample
 from drf_spectacular.types import OpenApiTypes
+from rest_framework.permissions import IsAdminUser, AllowAny
 
-from shop.models import Product, Category
 from . import ProductSerializer
+from ..filters import ProductFilter
+from ...shop.models import Product, Category
+
 
 @extend_schema_view(
     list = extend_schema(
@@ -106,9 +109,15 @@ from . import ProductSerializer
     ),
 )
 class ProductViewSet(ModelViewSet):
-    queryset = Product.objects.all()
+    queryset = Product.objects.select_related('category').all()
     serializer_class = ProductSerializer
     filter_backends = [DjangoFilterBackend, OrderingFilter, SearchFilter]
-    filterset_fields = ['category']
+    filterset_class = ProductFilter
     ordering_fields = ['price', 'rating']
-    search_fields = []
+    search_fields = ['name', 'description']
+
+    def get_permissions(self):
+        if self.action in ['create','update','partial_update','destroy']:
+            return [IsAdminUser()]
+        else:
+          return [AllowAny()]  
