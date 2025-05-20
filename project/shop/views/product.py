@@ -7,7 +7,7 @@ from rest_framework.permissions import IsAdminUser, AllowAny
 
 from . import ProductSerializer
 from ..filters import ProductFilter
-from ...shop.models import Product, Category
+from shop.models import Product, Category
 
 
 @extend_schema_view(

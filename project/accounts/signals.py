@@ -3,7 +3,7 @@ from django.dispatch import receiver
 from django.contrib.auth.models import User
 
 from .models import Profile
-from ..shop.models import Cart
+from shop.models import Cart
 
 
 @receiver(post_save, sender=User)

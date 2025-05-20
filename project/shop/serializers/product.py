@@ -1,7 +1,8 @@
 from rest_framework import serializers
 from drf_spectacular.utils import extend_schema_field, OpenApiTypes
+from django.core.exceptions import ValidationError
 
-from ...shop.models import Product
+from shop.models import Product
 
 
 class ProductSerializer(serializers.ModelSerializer):
@@ -31,4 +32,7 @@ class ProductSerializer(serializers.ModelSerializer):
         return obj.discount_price
     
     def clean_price(self, value):
-        ...
+        if value <= 0:
+            return ValidationError('The price should be higher than 0')
+        else:
+            return value
