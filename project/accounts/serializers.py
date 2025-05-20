@@ -17,3 +17,13 @@ class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile
         fields = '__all__'
+
+
+class RegisterFormSerializer(serializers.ModelSerializer):
+    email = serializers.EmailField(required=True)
+    captcha = serializers.CharField()
+
+    class Meta:
+        model = User
+        extra_fields = ['email']
+        fields = ['username', 'password1', 'password2']

@@ -5,7 +5,7 @@ from drf_spectacular.utils import extend_schema, extend_schema_view
 from django.shortcuts import get_object_or_404
 from django.conf import settings
 
-from shop.models import CartItem, Product, OrderItem, Payment, Order
+from shop.models import CartItem, Product, OrderItem, Payment, Order, Cart
 from . import CartSerializer, ProductSerializer
 from ..forms import OrderCreateForm
 from utils.email import send_order_confirmation_email
@@ -21,9 +21,10 @@ from utils.email import send_order_confirmation_email
     )
 )
 class CartViewSet(ViewSet):
-    queryset = CartItem.objects.all()
+    queryset = Cart.objects.all()
+    serializer_class = CartSerializer
 
-    @action(detail=False, methods=["post"], url_path="cart-add/<int:product_id>/")
+    @action(detail=False, methods=["post"], url_path="cart-add/<int:product_id>")
     def add(self, request, product_id=None):
         product = get_object_or_404(Product, id=product_id)
         if request.user.is_authenticated:
@@ -41,9 +42,11 @@ class CartViewSet(ViewSet):
             {"message": f"Product with id {product_id} has been added"}, status=200
         )
 
-    @action(detail=False, methods=["get"], url_path="cart-items/")
+    @action(detail=False, methods=["get"], url_path="get-cart-items")
     def detail(self, request):
-        if request.user.is_authenticated:
+        # if request.user.is_authenticated:
+        print(request.user)
+        if True:
             cart = request.user.cart
             return Response(CartSerializer(cart).data)
         else:
@@ -75,7 +78,7 @@ class CartViewSet(ViewSet):
             }
         )
 
-    @action(detail=False, methods=["post"], url_path="cart-checkout/")
+    @action(detail=False, methods=["post"], url_path="cart-checkout")
     def checkout(self, request):
         if request.user.is_authenticated:
             cart = request.user.cart

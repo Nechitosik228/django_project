@@ -2,20 +2,24 @@ from rest_framework.viewsets import ViewSet
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.decorators import action
 from rest_framework.response import Response
+from drf_spectacular.utils import extend_schema, extend_schema_view
+from drf_spectacular.types import OpenApiTypes
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.models import User
 from django.conf import settings
 
 from ..forms import RegisterForm, LoginForm, ProfileUpdateForm
-from ..serializers import ProfileSerializer, UserSerializer
-from ...utils.email import send_confirmation_email
-from ...shop.models import Product, CartItem
+from ..serializers import ProfileSerializer, UserSerializer, RegisterFormSerializer
+from utils.email import send_confirmation_email
+from shop.models import Product, CartItem
 
 
 class AccountViewSet(ViewSet):
     permission_classes = [AllowAny]
+    serializer_class = UserSerializer
 
     @action(detail=False, methods=["post"])
+    @extend_schema(request=RegisterFormSerializer, responses={201:OpenApiTypes.OBJECT, 400: OpenApiTypes.OBJECT})
     def user_register(self, request):
         form = RegisterForm(request.data)
         if form.is_valid():

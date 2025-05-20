@@ -9,8 +9,14 @@ from .views.views import (
     confirm_email,
     confirm_register,
 )
+from .views.accounts import AccountViewSet
+from rest_framework.routers import DefaultRouter
 
 app_name = "accounts"
+
+router = DefaultRouter()
+
+router.register(prefix=r'accounts', viewset=AccountViewSet, basename='accounts')
 
 urlpatterns = [
     path("register/", register, name="register"),
@@ -67,3 +73,5 @@ urlpatterns = [
         name="password_reset_complete",
     ),
 ]
+
+urlpatterns += router.urls
