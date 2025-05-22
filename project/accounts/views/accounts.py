@@ -18,8 +18,11 @@ class AccountViewSet(ViewSet):
     permission_classes = [AllowAny]
     serializer_class = UserSerializer
 
+    @extend_schema(
+        request=RegisterFormSerializer,
+        responses={201: OpenApiTypes.OBJECT, 400: OpenApiTypes.OBJECT},
+    )
     @action(detail=False, methods=["post"])
-    @extend_schema(request=RegisterFormSerializer, responses={201:OpenApiTypes.OBJECT, 400: OpenApiTypes.OBJECT})
     def user_register(self, request):
         form = RegisterForm(request.data)
         if form.is_valid():
@@ -45,10 +48,10 @@ class AccountViewSet(ViewSet):
             if user:
                 login(request, user)
                 session_cart = request.session.get(settings.CART_SESSION_ID, default={})
-                
+
                 if session_cart:
                     cart = request.user.cart
-                    
+
                     for p_id, a in session_cart.items():
                         product = Product.objects.get(id=p_id)
                         cart_item, created = CartItem.objects.get_or_create(
@@ -56,9 +59,9 @@ class AccountViewSet(ViewSet):
                         )
                         cart_item.amount = cart_item.amount + a if not created else a
                         cart_item.save()
-                    
+
                     session_cart.clear()
-                
+
                 return Response({"message": "successful login"}, status=200)
 
             return Response({"error": "Incorrect login or password"}, status=400)

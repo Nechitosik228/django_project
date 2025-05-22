@@ -20,8 +20,8 @@ class CartItemSerializer(serializers.ModelSerializer):
     
 
 class CartSerializer(serializers.ModelSerializer):
-    items = CartItemSerializer(source = 'cart_items', many = True)
-    total = serializers.ReadOnlyField()
+    items = CartItemSerializer(many = True)
+    total = serializers.SerializerMethodField()
 
     class Meta:
         model = Cart

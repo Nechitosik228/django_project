@@ -6,8 +6,8 @@ from django.template.loader import render_to_string
 from shop.models import Order
 
 
-def send_confirmation_email(request, user, email, cofirm_view:str):
-    confirm_url = request.build_absolute_uri(reverse(f"{cofirm_view}"))
+def send_confirmation_email(request, user, email):
+    confirm_url = request.build_absolute_uri(reverse(f"accounts:confirm_email"))
     confirm_url += f"?user={user.id}&email={email}"
     subject = "Confirm email"
     message = f"Confirm your email on link: {confirm_url}"

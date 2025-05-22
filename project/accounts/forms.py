@@ -4,9 +4,11 @@ from django.contrib.auth.forms import UserCreationForm
 from django.core.exceptions import ValidationError
 from captcha.fields import CaptchaField
 
+from .serializers import CaptchaFieldSerializer
+
 class RegisterForm(UserCreationForm):
     email = forms.EmailField(required=True)
-    captcha = CaptchaField()
+    captcha = CaptchaFieldSerializer()
 
     def clean_email(self):
         new_email = self.cleaned_data.get("email")
