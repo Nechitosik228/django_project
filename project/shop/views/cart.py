@@ -43,10 +43,8 @@ class CartViewSet(ViewSet):
         )
 
     @action(detail=False, methods=["get"], url_path="get-cart-items")
-    def detail(self, request):
-        # if request.user.is_authenticated:
-        print(request.user)
-        if True:
+    def items(self, request):
+        if request.user.is_authenticated:
             cart = request.user.cart
             return Response(CartSerializer(cart).data)
         else:
@@ -71,7 +69,7 @@ class CartViewSet(ViewSet):
 
         return Response(
             {
-                "user": request.user,
+                "user": None,
                 "items": cart_items,
                 "created_at": None,
                 "total": cart_total,
