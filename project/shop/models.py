@@ -69,14 +69,10 @@ class CartItem(models.Model):
 
     @property
     def item_total(self):
-        return (
-            self.amount * self.product.price
-            if not self.product.discount
-            else self.amount * self.product.discount_price
-        )
+        return self.amount * self.product.discount_price
 
     class Meta:
-        unique_together = ["cart", "product"]
+        unique_together = ("cart", "product")
 
     def str(self):
         return f"{self.product.name ,' : ', self.amount}"

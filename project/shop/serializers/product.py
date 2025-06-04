@@ -2,7 +2,7 @@ from rest_framework import serializers
 from drf_spectacular.utils import extend_schema_field, OpenApiTypes
 from django.core.exceptions import ValidationError
 
-from shop.models import Product
+from shop.models import Product, Category
 
 
 class ProductSerializer(serializers.ModelSerializer):
@@ -36,3 +36,19 @@ class ProductSerializer(serializers.ModelSerializer):
             return ValidationError('The price should be higher than 0')
         else:
             return value
+            
+    def clean_stock(self, value):
+        if value < 0:
+            return serializers.ValidationError('The stock should be higher than 0')
+        else:
+            return value
+    
+    def clean_description(self, value):
+        if isinstance(value,str):
+            return value
+        else:
+            return serializers.ValidationError('Description must be text')
+    
+    def clean_category(delf, value):
+        if not (isinstance(value, int)) or not (isinstance(value, Category)):
+            return serializers.ValidationError("Category must be int or Category instance")
