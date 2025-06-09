@@ -1,8 +1,10 @@
 import pytest
 
+import pytest_check as check
 from shop.serializers.product import ProductSerializer
 
 from .fixtures import category, product_with_discount, product, order
+
 
 @pytest.mark.django_db
 def test_product_serializer_valid(category):
@@ -31,16 +33,16 @@ def test_product_serializer_invalid(category):
         "stock": -3,
         "price":-100,
         "available": 2,
-        "category": "test_category123",
         "nomenclature":"*"*101,
         "rating":"*",
         "discount":-10,
-        "attributes": []
+        "attributes": "*"
     }
     
     
-    
+
     serializer = ProductSerializer(data=data)
+    
     
     assert not serializer.is_valid()
     assert serializer.errors
@@ -50,4 +52,4 @@ def test_product_serializer_invalid(category):
     assert 'A valid number is required.' in serializer.errors["rating"]
     for field in data.keys():
         assert field in serializer.errors
-    print(dict(serializer.errors))
+    
