@@ -97,6 +97,10 @@ class Order(models.Model):
     status = models.IntegerField(choices=Status, default=Status.NEW)
     is_paid = models.BooleanField(default=False)
 
+    @property
+    def total(self):
+        return sum(item.item_total for item in self.items)
+
     def __str__(self):
         return f"order #{self.id}"
 
@@ -109,11 +113,7 @@ class OrderItem(models.Model):
 
     @property
     def item_total(self):
-        return (
-            self.amount * self.product.price
-            if not self.product.discount
-            else self.amount * self.product.discount_price
-        )
+        return self.amount * self.product.discount_price
 
     def __str__(self):
         return f"{self.order.id} : {self.product.name} : {self.amount} : ${self.price}"
