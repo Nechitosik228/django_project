@@ -1,13 +1,14 @@
 import os
 import pytest
-from django.contrib.auth.models import User
+
 
 import django
 
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "project.settings")
 django.setup()
-
+from django.contrib.auth.models import User
+from rest_framework.test import APIClient
 
 @pytest.fixture
 def user():
@@ -15,3 +16,8 @@ def user():
         username="testusertestusertestuser", password="password_test_user"
     )
     
+
+@pytest.fixture
+def api_client():
+    client = APIClient()
+    return client
