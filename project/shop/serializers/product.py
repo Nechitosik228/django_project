@@ -6,7 +6,7 @@ from shop.models import Product, Category
 
 
 class ProductSerializer(serializers.ModelSerializer):
-    category = serializers.PrimaryKeyRelatedField(read_only=True)
+    category = serializers.PrimaryKeyRelatedField()
     discount_price = serializers.SerializerMethodField()
 
     class Meta:
