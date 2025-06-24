@@ -89,7 +89,9 @@ def test_cart_model_diffrent_products(user, product_with_discount, product):
 @pytest.mark.django_db
 def test_order_model_one_item(order, product):
     order_item = OrderItem.objects.create(
-        order=order, product=product, price=product.price
+        order=order, 
+        product=product, 
+        price=product.price
     )
 
     assert order_item.amount == 1

@@ -48,3 +48,5 @@ def order(product_with_discount, product):
         product = product,
         price = product.discount_price
     )
+
+    return order_

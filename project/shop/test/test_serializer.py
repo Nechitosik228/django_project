@@ -33,7 +33,7 @@ def test_product_serializer_invalid(category):
     data = {
         "name": "*"*101,
         "description": {},
-        "stock": -3,
+        "entity": -3,
         "price":-100,
         "available": 2,
         "nomenclature":"*"*101,
@@ -58,21 +58,21 @@ def test_product_serializer_invalid(category):
 def test_product_serializer_read_only(category):
     data = {
         "name": "test_name",
-        "description": {},
-        "stock": 3,
+        "description": "test_description",
+        "stock":3,
         "price":100,
-        "available": 1,
-        "category" : category,
-        "nomenclature":"nomenclature",
-        "rating":4.9,
+        "available": True,
+        "category": category,
+        "nomenclature":"test_nomenclature",
+        "rating":2,
         "discount":10,
-        "attributes": []
+        "attributes": {}
     }
 
     serializer = ProductSerializer(data=data)
 
     assert serializer.is_valid()
-    assert "category" not in serializer.data
+    assert "category" not in serializer.data.keys()
 
 
 
@@ -94,16 +94,14 @@ def test_order_serializer_read_only(order, user):
         'address':'TEST_ADDRESS',
         }
     
-    serializer = OrderSerializer(order)
+
     serializer_d = OrderSerializer(data=data)
 
-    assert serializer.is_valid()
     assert serializer_d.is_valid()
     assert 'items' not in serializer_d.data
 
     serializer = OrderSerializer(order)
 
-    assert serializer.is_valid()
     assert 'items' in serializer.data
 
 

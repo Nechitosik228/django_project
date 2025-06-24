@@ -99,7 +99,7 @@ class Order(models.Model):
 
     @property
     def total(self):
-        return sum(item.item_total for item in self.items)
+        return sum([item.item_total for item in self.items.all()])
 
     def __str__(self):
         return f"order #{self.id}"

@@ -23,4 +23,4 @@ class OrderSerializer(serializers.ModelSerializer):
 
     @extend_schema_field(OpenApiTypes.FLOAT)
     def get_total(self, obj):
-        return obj.total
+        return getattr(obj, "total", None)
