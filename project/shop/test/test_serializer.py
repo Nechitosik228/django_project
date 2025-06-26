@@ -1,6 +1,5 @@
 import pytest
 
-import pytest_check as check
 from shop.serializers.product import ProductSerializer
 from shop.serializers.order import OrderItemSerializer, OrderSerializer
 from shop.serializers.category import CategorySerializer
