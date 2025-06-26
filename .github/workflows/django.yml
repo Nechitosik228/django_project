@@ -34,4 +34,5 @@ jobs:
         pytest -s
     - name: Build Docker image
       run: |
+        cd project/
         docker build -t django-project .
