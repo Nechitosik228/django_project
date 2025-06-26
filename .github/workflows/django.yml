@@ -31,4 +31,4 @@ jobs:
         pytest -s
     - name: Build Docker image
       run: |
-        docker build -t my-django-app .
+        docker build -t django-project .
