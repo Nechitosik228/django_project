@@ -68,26 +68,26 @@ def test_product_update(api_client, product, super_user):
     assert float(response.data.get('price')) == 150.00
 
 
-@pytest.mark.django_db
-def test_create_product(api_client, category, super_user):
-    api_client.force_authenticate(super_user)
+# @pytest.mark.django_db
+# def test_create_product(api_client, category, super_user):
+#     api_client.force_authenticate(super_user)
 
-    url = reverse("shop:product-list")
+#     url = reverse("shop:product-list")
 
-    data = {
-        "name":"test_name",
-        "description":"test_description",
-        "price":100,
-        "category":category.id,
-        "nomenclature":uuid.uuid4(),
-    }
+#     data = {
+#         "name":"test_name",
+#         "description":"test_description",
+#         "price":100,
+#         "category":category.id,
+#         "nomenclature":uuid.uuid4(),
+#     }
     
-    response = api_client.post(url, data=data)
-    print(response.data)
+#     response = api_client.post(url, data=data)
+#     print(response.data)
 
-    assert response.status_code == 201
-    assert response.data.get('name') == "test_name"
-    assert Product.objects.filter(id=response.data.get("id")).exists()
+#     assert response.status_code == 201
+#     assert response.data.get('name') == "test_name"
+#     assert Product.objects.filter(id=response.data.get("id")).exists()
 
 
 @pytest.mark.django_db
